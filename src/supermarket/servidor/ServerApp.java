@@ -36,13 +36,16 @@ public class ServerApp{
 		this.host = host;
 		this.gate = gate;
 		
+		//estabelecer um gerenciador de conexões múltiplas
 		serverConnection = ServerConnection.getServer (host, gate, this);
 		
+		//verificar a criação com sucesso
 		if(serverConnection == null){
 			System.out.println("Falha na criação de Conexão Server");
 			System.exit(1);
 		}
 		
+		//criar listagem de usuário para recuperação do Banco de Dados
 		clients = new ArrayList<User>();
 		System.out.println("Conexão Server aberta");
 		 
@@ -63,13 +66,20 @@ public class ServerApp{
 		return server;
 	}
 	
+	/**
+	 * O serviço de conexões fica a serviço do ServerConnection e o tratamento de requisiçoes e respostas, do ClientRequest
+	 * @param args
+	 */
 	public static void main(String[] args) {
+		//só será cobrado o Gate, pois o IP será local
+		
 		Scanner input = new Scanner (System.in);
 		System.out.println("Host_IP: localhost");
 		String host = "localhost";
 		System.out.print("Gate_: ");
 		String gate = input.nextLine();
 		
+		//começar serviço de conexão
 		getServer(host, gate);
 		new Thread(serverConnection).start();
 	}
@@ -82,12 +92,15 @@ public class ServerApp{
 	 * @return
 	 */
 	public synchronized int signupUser (User user){
+		//caso o usuário tenha um ID alterado do hardcoded não será possível cadastrá-lo
 		if(user.getID() < 0){
 			usersID++;
 			
 			user.setID(usersID);
 			clients.add(user);
 			System.out.println("Cadastro do usuário: "+user);
+			
+			//retorna o ID do cliente cadastrado
 			return usersID;
 		}
 		return -1;
@@ -100,6 +113,7 @@ public class ServerApp{
 	 * @return
 	 */
 	public String loginUser (int ID, String password){
+		//busca por usuário cadastrado com o ID pedido
 		Optional<User> userOptional = clients
 				.stream()
 				.filter(user -> user.getID() == ID)
@@ -108,11 +122,15 @@ public class ServerApp{
 		
 		try{
 			user = userOptional.get();
+			//verifica correspondencia de senha para o usuário hipotético
 			if(user.getPassword().equals(password))
+				//retorna o usuário
 				return user.toString();
 			else
+				//retorna mensagem de erro de senha
 				return "wrong";
 		} catch(NoSuchElementException e){
+			//não retornan usuário
 			return null;
 		}
 	}

@@ -24,6 +24,7 @@ public class Requester implements Runnable{
 	private Requester (Socket sock, ClientApp client){
 		
 		try {
+			//guardar os stream de entrada e saída do cliente
 			sockIn = new BufferedReader ( new InputStreamReader (sock.getInputStream()) );
 			sockOut = new PrintWriter ( sock.getOutputStream(), true );
 			Requester.client = client;
@@ -87,26 +88,45 @@ public class Requester implements Runnable{
 		client.responseLogin(status);
 	}
 	
+	/**
+	 * Requisição a ser feita pelo ClientApp - logout
+	 */
 	public void logoutUser (){
 		sockOut.println("logout");
 	}
 	
+	/**
+	 * Método que irá chamar método de ClientApp pela requisição de logout para resposta
+	 * @param status
+	 */
 	public void responseLogout (boolean status){
 		client.responseLogout(status);
 	}
 	
+	/**
+	 * Método que irá enviar mensagem de relatório do servidor ao cliente e destravar o seu wait
+	 */
 	public void responseMessage (){
 		client.responseMessage(serverMessage);
 	}
 	
+	/**
+	 * --
+	 */
 	public void errorCommand (){
 		sockOut.println("errorCommand");
 	}
 	
+	/**
+	 * --
+	 */
 	private void responseErrorCommand (){
 		client.errorCommand();
 	}
 	
+	/**
+	 * Método de logistica para encerramento da thread Requester
+	 */
 	public void endRequest (){
 		sockOut.println("exit");
 	}
@@ -120,46 +140,63 @@ public class Requester implements Runnable{
 		
 		String response = null;
 		try {
-			exitRequest:
+			exitRequest://label para encerramento da thread
+				
+			//looping para leitura de respostas do servidor
 			while((response = sockIn.readLine()) != null){
 				boolean status = false;
+				
+				//switch para processar o comando de resposta do servidor
 				switch(response){
 					case "signUp":
+						//receber dados
 						status = Boolean.parseBoolean(sockIn.readLine());						
 						int ID = Integer.parseInt(sockIn.readLine());
 						String password = sockIn.readLine();
+						
+						//enviar respostas ao cliente
 						responseSignup(status, ID, password);
 						break;
 						
 					case "login":
+						//receber dados
 						status = Boolean.parseBoolean(sockIn.readLine());
+						
+						//enviar respostas ao cliente
 						responseLogin(status);
 						break;
 						
 					case "logout":
+						//receber dados
 						status = Boolean.parseBoolean(sockIn.readLine());
+						
+						//enviar respostas ao cliente
 						responseLogout(status);
 						break;
 						
 					case "exit":
-					
+						//sair do looping
 						break exitRequest;
 					
 					case "errorCommand":
-						
+						//processamento de comandos não reconhecidos
 						responseErrorCommand();
 						break;
 						
 					default:
 						break;
 				}//switch
+				
+				//recebimento de mensagem de relatório de operação
 				serverMessage = sockIn.readLine();
+				//envio da mensagem
 				responseMessage ();
+				
 			}//while
 		} catch (IOException e) {
 			System.out.println("IOException: Requester -> falha na leitura da resposta do servidor");
 		}
 		System.out.println("request conection shutdown");
-	}
+	}//run
 
 }

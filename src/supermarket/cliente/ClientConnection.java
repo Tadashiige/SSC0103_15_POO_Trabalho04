@@ -1,3 +1,7 @@
+/**
+ * Classe simples de uso apenas inicial para estabelecer conexão com o servidor.
+ */
+
 package supermarket.cliente;
 
 import java.io.IOException;

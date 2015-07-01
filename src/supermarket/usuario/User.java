@@ -67,6 +67,11 @@ public class User {
 		return null;
 	}
 	
+	
+	/**
+	 * Sets e Gets dos atributos
+	 */
+	
 	public void setName (String name){
 		this.Name = name;
 	}
