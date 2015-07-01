@@ -74,7 +74,6 @@ public class ServerConnection implements Runnable{
 			
 			while((newConnection = serverSocket.accept()) != null){
 				ClientRequest newClient = new ClientRequest (server, newConnection);
-				System.out.println("Novo usuário conectado. IP: "+newConnection.getInetAddress().getHostAddress());
 				new Thread(newClient).start();
 			}
 		} catch (IOException e) {

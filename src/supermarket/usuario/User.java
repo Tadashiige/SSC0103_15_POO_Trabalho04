@@ -1,4 +1,4 @@
-package supermarket.cliente;
+package supermarket.usuario;
 
 /**
  * 
@@ -18,6 +18,7 @@ public class User {
 	private String Password = null;
 	
 	public User(){
+		this.ID = -1;
 	}
 	
 	/**
@@ -26,11 +27,11 @@ public class User {
 	 */
 	@Override
 	public String toString (){
-		return this.ID +
-				this.Name +
-				this.Address +
-				this.Tel +
-				this.Email +
+		return this.ID + ";"+
+				this.Name + ";"+
+				this.Address + ";"+
+				this.Tel + ";"+
+				this.Email + ";"+
 				this.Password;
 	}
 	
@@ -54,6 +55,7 @@ public class User {
 		}
 		catch (NumberFormatException e){
 			System.out.println("NumberFormatException: Exception de formatação no User Parse");
+			e.printStackTrace();
 		}
 		catch (ArrayIndexOutOfBoundsException e){
 			System.out.println("Array Out of Bounds: Erro na gravação ou escrita da String User");
