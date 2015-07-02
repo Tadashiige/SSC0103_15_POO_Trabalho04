@@ -103,6 +103,12 @@ public class Requester implements Runnable{
 		client.responseLogout(status);
 	}
 	
+	public void exitUser (){
+		sockOut.println("logout");
+		sockOut.println("exit");
+	}
+	
+	
 	/**
 	 * Método que irá enviar mensagem de relatório do servidor ao cliente e destravar o seu wait
 	 */

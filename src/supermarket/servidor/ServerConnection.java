@@ -37,7 +37,7 @@ public class ServerConnection implements Runnable{
 			
 		} catch (IOException e) {
 			
-			System.out.println("facha na abertura do servidor");
+			System.out.println("falha na abertura do servidor. Porta provalmente em uso.");
 		} catch (NumberFormatException e){
 			
 			System.out.println("formato numérico errado na criação do servidor");

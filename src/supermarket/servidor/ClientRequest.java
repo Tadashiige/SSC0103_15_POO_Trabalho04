@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Optional;
 
 import supermarket.usuario.*;
 
@@ -64,8 +63,10 @@ public class ClientRequest implements Runnable{
 						user = User.parseUser (sockIn.readLine());
 						int newID = -1;
 						//pedido ao servidor cadastrar o usuário e retornar seu ID
-						if((newID = server.signupUser (user)) > 0)
+						if((newID = server.signupUser (user)) > 0){
 							status = true;
+							msg = "Guarde o seu ID único para login -> ID = "+newID;
+						}
 						else
 							msg = "Valor do ID do usuário enviado errado. Código alterado (deveria ser ID = -1 em hardcoded)";
 						operation = "cadastro";
@@ -163,10 +164,10 @@ public class ClientRequest implements Runnable{
 				
 				//enviar mensagem de relatório para o cliente
 				if(msg != null){
-					sockOut.println(msg);
+					sockOut.println(operation+": "+msg);
 					System.out.println(msg);
 				}else{
-					sockOut.println("Operação com Sucesso");
+					sockOut.println(operation+": Operação com Sucesso");
 					System.out.println("Operação com Sucesso");
 				}
 				System.out.println("Operação: "+operation+" status: "+status);
